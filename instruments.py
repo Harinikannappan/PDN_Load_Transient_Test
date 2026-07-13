@@ -1,4 +1,5 @@
 import pyvisa
+from config import PSU, LOAD, SCOPE, DMM
 
 class InstrumentManager:
 
@@ -6,10 +7,13 @@ class InstrumentManager:
 
         rm = pyvisa.ResourceManager()
 
-        self.psu = rm.open_resource("USB0::0x05E6::0x2230::1234567::INSTR")
-        self.load = rm.open_resource("USB0::0x05E6::0x2380::7654321::INSTR")
-        self.scope = rm.open_resource("USB0::0x2A8D::0x1766::MY12345678::INSTR")
-        self.dmm = rm.open_resource("USB0::0x05E6::0x6500::9876543::INSTR")
+        self.psu = rm.open_resource(PSU)
+        self.load = rm.open_resource(LOAD)
+        self.scope = rm.open_resource(SCOPE)
+        self.dmm = rm.open_resource(DMM)
+
+        for inst in [self.psu, self.load, self.scope, self.dmm]:
+            inst.timeout = 10000  # ms -- waveform transfers can be slow
 
     def initialize(self):
 
@@ -19,7 +23,8 @@ class InstrumentManager:
 
     def close(self):
 
-        self.psu.close()
-        self.load.close()
-        self.scope.close()
-        self.dmm.close()
+        for inst in [self.psu, self.load, self.scope, self.dmm]:
+            try:
+                inst.close()
+            except Exception as e:
+                print(f"Warning: failed to close instrument: {e}")
