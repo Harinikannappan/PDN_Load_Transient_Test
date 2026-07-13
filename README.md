@@ -16,13 +16,24 @@ PyVISA
 ## Features
 
 - Automatic Instrument Initialization
-- Load Transient Testing
-- Voltage Measurement
-- Ripple Measurement
-- Oscilloscope Screenshot Capture
+- Load Transient Testing (repeated captures per rail, configurable in config.py)
+- Raw Waveform Capture (per capture, saved as CSV for later analysis)
+- Peak Deviation & Settling Time Calculation
 - CSV Logging
 - Pass / Fail Evaluation
-- Statistics Generation
+- Per-Rail Statistics & Report Generation
+
+## Assumptions
+
+Load transient test parameters are not specified in the source Annexure and are
+assumed in `config.py`:
+- Load step 10% -> 90% of each rail's rated max current
+- 10 captures per rail
+- Pass criteria: peak deviation <=5% of nominal, settling time <=500us
+  (to within +/-1% of nominal)
+
+These should be replaced with the actual program specification before use on
+real hardware.
 
 ## Folder Structure
 
