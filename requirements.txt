@@ -1,0 +1,6 @@
+pyvisa
+pyvisa-py
+pandas
+matplotlib
+numpy
+jinja2
